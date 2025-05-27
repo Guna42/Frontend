@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 // API route handler for fetching posts by ID
 export async function GET(
@@ -11,16 +11,16 @@ export async function GET(
     const data = await response.json();
 
     if (!response.ok) {
-      return Response.json(
+      return NextResponse.json(
         { error: data.message || 'Failed to fetch post' },
         { status: response.status }
       );
     }
 
-    return Response.json(data);
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching post:', error);
-    return Response.json(
+    return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
