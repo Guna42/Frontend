@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 type RouteContext = {
   params: {
@@ -10,26 +10,23 @@ export async function GET(
   request: NextRequest,
   context: RouteContext
 ) {
-  const { id } = context.params;
-
   try {
-    // Replace with your backend server URL
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/get-post/${id}`
-    );
+    const { id } = context.params;
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/${id}`);
+    const data = await response.json();
 
     if (!response.ok) {
-      return NextResponse.json(
-        { error: 'Failed to fetch post' },
+      return Response.json(
+        { error: data.message || 'Failed to fetch post' },
         { status: response.status }
       );
     }
 
-    const post = await response.json();
-    return NextResponse.json(post);
-  } catch {
-    return NextResponse.json(
-      { error: 'An error occurred while fetching the post' },
+    return Response.json(data);
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    return Response.json(
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
