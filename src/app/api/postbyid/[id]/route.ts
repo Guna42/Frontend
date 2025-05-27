@@ -1,17 +1,11 @@
 import { NextRequest } from 'next/server';
 
-type RouteContext = {
-  params: {
-    id: string;
-  };
-};
-
 export async function GET(
   request: NextRequest,
-  context: RouteContext
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = params;
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/${id}`);
     const data = await response.json();
 
